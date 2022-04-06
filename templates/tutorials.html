@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorials | PhotoCode</title>
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 78px;
+            background: #11101d;
+            padding: 6px 14px;
+            z-index: 99;
+            transition: all 0.5s ease;
+        }
+
+        .sidebar.open {
+            width: 250px;
+        }
+
+        .sidebar .logo-details {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .sidebar .logo-details .icon {
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .sidebar .logo-details .logo_name {
+            padding-top: 20px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .sidebar.open .logo-details .icon,
+        .sidebar.open .logo-details .logo_name {
+            opacity: 1;
+        }
+
+        .sidebar .logo-details #btn {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            font-size: 22px;
+            transition: all 0.4s ease;
+            font-size: 23px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .sidebar.open .logo-details #btn {
+            text-align: right;
+        }
+
+        .sidebar i {
+            color: #fff;
+            height: 60px;
+            min-width: 50px;
+            font-size: 28px;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .sidebar .nav-list {
+            margin-top: 20px;
+            height: 100%;
+        }
+
+        .sidebar li {
+            position: relative;
+            margin: 8px 0;
+            list-style: none;
+        }
+
+        .sidebar li .tooltip {
+            position: absolute;
+            top: -20px;
+            left: calc(100% + 15px);
+            z-index: 3;
+            background: #fff;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 400;
+            opacity: 0;
+            white-space: nowrap;
+            pointer-events: none;
+            transition: 0s;
+        }
+
+        .sidebar li:hover .tooltip {
+            opacity: 1;
+            pointer-events: auto;
+            transition: all 0.4s ease;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .sidebar.open li .tooltip {
+            display: none;
+        }
+
+        .sidebar li a {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            border-radius: 12px;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            background: #11101d;
+        }
+
+        .sidebar li a:hover {
+            background: #fff;
+        }
+
+        .sidebar li a .links_name {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 400;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s;
+        }
+
+        .sidebar.open li a .links_name {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sidebar li a:hover .links_name,
+        .sidebar li a:hover i {
+            transition: all 0.5s ease;
+            color: #11101d;
+        }
+
+        .sidebar li i {
+            height: 50px;
+            line-height: 50px;
+            font-size: 18px;
+            border-radius: 12px;
+        }
+
+        .sidebar li.profile {
+            position: fixed;
+            height: 60px;
+            width: 78px;
+            left: 0;
+            bottom: -8px;
+            padding: 10px 14px;
+            background: #1d1b31;
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+
+        .sidebar .profile #log_out {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            background: #1d1b31;
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 0px;
+            transition: all 0.5s ease;
+        }
+
+        .sidebar.open .profile #log_out {
+            width: 50px;
+            background: none;
+        }
+
+        .home-section {
+            position: relative;
+            background: #e4e9f7;
+            min-height: 100vh;
+            top: 0;
+            left: 78px;
+            width: calc(100% - 78px);
+            transition: all 0.5s ease;
+            z-index: 2;
+        }
+
+        .sidebar.open~.home-section {
+            left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .home-section .text {
+            display: inline-block;
+            color: #11101d;
+            font-size: 25px;
+            font-weight: 500;
+            margin: 18px;
+        }
+
+        @media (max-width: 420px) {
+            .sidebar li .tooltip {
+                display: none;
+            }
+        }
+
+        section {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .center {
+        width: 100%;
+        display: grid;
+        place-items: center;
+        font-family: 'Source Serif Pro', serif;
+        font-weight: bold;
+    }
+
+    .center h1 {
+        font-size: 45px;
+    }
+
+    section#subnav {
+        padding: 20px;
+        width: 100%;
+    }
+
+    #subnav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #subnav ul li {
+        list-style: none;
+        background: #96f1ff;
+        color: #111 !important;
+        padding: 8px 20px;
+        margin: 5px;
+        border-radius: 5px;
+        letter-spacing: 1px;
+        cursor: pointer;
+    }
+
+    #subnav ul li.active {
+        background: #03a9f4;
+        color: #fff !important;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        padding: 20px;
+        grid-gap: 40px;
+        font-family: 'Source Serif Pro', serif;
+        padding-left: 120px;
+    }
+
+    .card {
+        border-radius: 20px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.18);
+        width: 300px;
+    }
+
+    .container {
+        position: relative;
+        display: grid;
+        place-items: center;
+    }
+
+    .container img {
+        width: 80%;
+        display: block;
+        border-radius: 20px 20px 0 0;
+        padding-top: 20px;
+    }
+
+    .container:after {
+        content: "";
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 20px 20px 0 0;
+        opacity: 0.7;
+    }
+
+    .details {
+        padding: 20px 10px;
+        display: grid;
+        place-items: center;
+    }
+
+    .details>h3 {
+        color: black;
+        font-weight: 600;
+        font-size: 25px;
+        margin: 10px 0 15px 0;
+    }
+
+    .details p {
+        color: #a0a0a0;
+        font-size: 10px;
+        line-height: 30px;
+        font-weight: 400;
+    }
+    </style>
+    <div class="sidebar">
+        <div class="logo-details">
+            <div class="logo_name">Photocode</div>
+            <i class="bx bx-menu" id="btn"></i>
+        </div>
+        <ul class="nav-list">
+            <li>
+                <a href="/">
+                    <i class='bx bx-code-block'></i>
+                    <span class="links_name">Capture and Upload</span>
+                </a>
+                <span class="tooltip">Capture and Upload</span>
+            </li>
+
+            <li>
+                <a href="blog">
+                    <i class='bx bxl-blogger'></i>
+                    <span class="links_name">Blog</span>
+                </a>
+                <span class="tooltip">Blog</span>
+            </li>
+
+            <li>
+                <a href="tutorials">
+                    <i class='bx bx-chalkboard'></i>
+                    <span class="links_name">Tutorials</span>
+                </a>
+                <span class="tooltip">Tutorials</span>
+            </li>
+
+            <li>
+                <a href="opportunity">
+                    <i class='bx bx-briefcase'></i>
+                    <span class="links_name">Opportunity</span>
+                </a>
+                <span class="tooltip">Opportunity</span>
+            </li>
+
+            <li class="profile">
+                <a href="/signout">
+                    <i class="bx bx-log-out" id="log_out"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <section id="subnav">
+        <ul>
+            <li class="list active" data-filter="all">All</li>
+            <li class="list" data-filter="python">Python</li>
+            <li class="list" data-filter="c">C</li>
+            <li class="list" data-filter="cpp">C++</li>
+            <li class="list" data-filter="java">Java</li>
+            <li class="list" data-filter="javaScript">JavaScript</li>
+        </ul>
+    </section>
+    
+    <div class="cards">
+        <div class="card python">
+            <div class="container">
+                <img src="../media/python.png" alt="python">
+            </div>
+            <div class="details">
+                <h3>Python</h3>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=hEgO047GxaQ&list=PLsyeobzWxl7poL9JTVyndKe62ieoN-MZ3"
+                        target="blank">Telusko</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=Z1Yd7upQsXY&list=PLBZBJbE_rGRWeh5mIBhD-hhDwSEDxogDg"
+                        target="blank">CS Dojo</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=YYXdXT2l-Gg&list=PL-osiE80TeTt2d9bfVyTiXJA-UTHn6WwU"
+                        target="blank">Corey Schafer</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=RAwntanK4wQ&list=PLwgFb6VsUj_lQTpQKDtLXKXElQychT_2j"
+                        target="blank">Harshit Vashisth</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=oVp1vrfL_w4&list=PLQVvvaa0QuDe8XSftW-RAxdo6OmaeL85M"
+                        target="blank">Sentdex</a></p>
+            </div>
+        </div>
+    
+        <div class="card c">
+            <div class="container">
+                <img src="../media/c.png" alt="c">
+            </div>
+            <div class="details">
+                <h3>c</h3>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="blank">Code with Harry</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=KJgsSFOSQv0" target="blank">FreeCodeCamp</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=Bz4MxDeEM6k" target="blank">Corey Schafer</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=wKoGImLA2KA&list=PLsyeobzWxl7oBxHp43xQTFrw9f1CDPR6C"
+                        target="blank">Telusko</a></p>
+            </div>
+        </div>
+    
+        <div class="card cpp">
+            <div class="container">
+                <img src="../media/cpp.png" alt="cpp">
+            </div>
+            <div class="details">
+                <h3>C++</h3>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=j8nAHeVKL08&list=PLu0W_9lII9agpFUAlPFe_VNSlXW5uE0YL"
+                        target="blank">Code with Harry</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=vLnPwxZdW4Y" target="blank">freeCodeCamp</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=ueOqcwlFfMc" target="blank">Nitrogen</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=18c3MTX0PK0&list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb"
+                        target="blank">The Chemo</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=e1YafrxYOWw&list=PLS1QulWo1RIYSyC6w2-rDssprPrEsgtVK"
+                        target="blank">Programming Knowledge</a></p>
+            </div>
+        </div>
+    
+        <div class="card java">
+            <div class="container">
+                <img src="../media/java.png" alt="java">
+            </div>
+            <div class="details">
+                <h3>Java</h3>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=eIrMbAQSU34" target="blank">Programming with Mosh</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=8cm1x4bC610" target="blank">Telusko</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=ntLJmHOJ0ME&list=PLu0W_9lII9agS67Uits0UnJyrYiXhDS6q"
+                        target="blank">Code with Harry</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=lxja8wBwN0k&list=PLKKfKV1b9e8ps6dD3QA5KFfHdiWj9cB1s"
+                        target="blank">Apni Kaksha</a></p>
+            </div>
+        </div>
+    
+        <div class="card javaScript">
+            <div class="container">
+                <img src="../media/js.png" alt="js">
+            </div>
+            <div class="details">
+                <h3>JavaScript</h3>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=W6NZfCO5SIk" target="blank">Programming with Mosh</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=hKB-YGF14SY&t=10880s" target="blank">Code with Harry</a></p>
+                <p style="font-size: 20px;"><a style="text-decoration: none;"
+                        href="https://www.youtube.com/watch?v=YYXdXT2l-Gg&list=PL-osiE80TeTt2d9bfVyTiXJA-UTHn6WwU"
+                        target="blank">Telusko</a></p>
+            </div>
+    
+        </div>
+    
+    
+        <script src="https://code.iconify.design/1/1.0.4/iconify.min.js"></script>
+    
+        <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function () {
+                $(".list").click(function () {
+                    const value = $(this).attr("data-filter");
+                    if (value == "all") {
+                        $(".card").fadeIn(400);
+                        $("li.list.active").removeClass("active");
+                        $(this).addClass("active");
+                    }
+                    else {
+                        $("li.list.active").removeClass("active");
+                        $(this).addClass("active");
+                        $(".card")
+                            .not("." + value)
+                            .fadeOut(400);
+                        $(".card")
+                            .filter("." + value)
+                            .fadeIn(400);
+                    }
+                });
+            });
+        </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
+
+    <script>
+        function imgsplit() {
+            $("#splitform").append(
+                "<input type = 'file' name = 'myfile' id='myfile'>"
+            );
+            $("#mos").val("1");
+            $("#myfile").attr("value", "1");
+        }
+        function ammsplit() {
+            $("#splitform").append(
+                '<input type="text" placeholder="Amount of bill" name="ammount">'
+            );
+            $("#mos").attr("value", "2");
+        }
+        let sidebar = document.querySelector(".sidebar");
+        let closeBtn = document.querySelector("#btn");
+        let searchBtn = document.querySelector(".bx-search");
+
+        closeBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            menuBtnChange();
+        });
+
+        searchBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            menuBtnChange();
+        });
+
+        console.log(Cookies.get("csrftoken"));
+    </script>
+</body>
+
+</html>
